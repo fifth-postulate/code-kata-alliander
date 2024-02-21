@@ -5,6 +5,7 @@ import Html exposing (Html)
 import Http
 import Result exposing (Result)
 import Task
+import WheelOfSuggestions.Suggestion as Suggestion exposing (Suggestion)
 
 
 main : Program () Model Msg
@@ -28,17 +29,13 @@ type alias Topics =
     { suggestions : List Suggestion }
 
 
-type alias Suggestion =
-    { topic : String }
-
-
 init : flag -> ( Model, Cmd Msg )
 init _ =
     let
         model =
             Initializing
     in
-    ( model, Task.perform FetchedTopics <| Task.succeed (Ok { suggestions = [ { topic = "TDD like you meant it" } ] }) )
+    ( model, Task.perform FetchedTopics <| Task.succeed (Ok { suggestions = [ Suggestion.topic "TDD like you meant it" ] }) )
 
 
 type Msg
@@ -61,16 +58,24 @@ view : Model -> Html Msg
 view model =
     case model of
         Initializing ->
-            viewInitializing
+            template "Initializing" viewInitializing
 
         Error error ->
-            viewError error
+            template "A problem occurred:" <| viewError error
 
         Ready _ ->
-            viewReady
+            template "Are you feeling lucky?" <| viewReady
 
         Presenting suggestion _ ->
-            viewSuggestion suggestion
+            template "Your suggestion is:" <| viewSuggestion suggestion
+
+
+template : String -> Html Msg -> Html Msg
+template title content =
+    Html.div []
+        [ Html.p [] [ Html.text title ]
+        , content
+        ]
 
 
 viewInitializing : Html msg
@@ -80,30 +85,20 @@ viewInitializing =
 
 viewError : Http.Error -> Html msg
 viewError _ =
-    Html.div []
-        [ Html.p []
-            [ Html.text "A problem occurred:" ]
-        , Html.pre []
-            [ Html.text "Unspecified error"
-            ]
+    Html.pre []
+        [ Html.text "Unspecified error"
         ]
 
 
 viewReady : Html Msg
 viewReady =
-    Html.div []
-        [ Html.p []
-            [ Html.text "Are you feeling lucky?"
-            ]
-        ]
+    Html.button [] [ Html.text "go" ]
 
 
 viewSuggestion : Suggestion -> Html Msg
-viewSuggestion { topic } =
-    Html.div []
-        [ Html.p []
-            [ Html.text topic
-            ]
+viewSuggestion suggestion =
+    Html.span []
+        [ Html.text <| Suggestion.description suggestion
         ]
 
 
