@@ -20,4 +20,4 @@ The _Fizz Buzz_ of a number should adhere to the following rules
 1. If a number is divisible by 3 it is "Fizz".
 2. If a number is divisible by 5 it is "Buzz".
 3. If a number is divisible by both 3 and 5 it is "FizzBuzz".
-4. Otherwise it is the literal represeentation.
+4. Otherwise it is the literal representation.
