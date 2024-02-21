@@ -2,7 +2,10 @@ module WheelOfSuggestions exposing (..)
 
 import Browser
 import Html exposing (Html)
+import Html.Attributes as Attribute
+import Html.Events as Event
 import Http
+import Random exposing (Generator, generate)
 import Result exposing (Result)
 import Task
 import WheelOfSuggestions.Suggestion as Suggestion exposing (Suggestion)
@@ -83,10 +86,26 @@ update msg model =
                     ( Error error, Cmd.none )
 
         PickATopic ->
-            ( model, Cmd.none )
+            ( model, generate Topic (suggestionFrom model) )
 
         Topic suggestion ->
             ( Presenting suggestion <| topics model, Cmd.none )
+
+
+suggestionFrom : Model -> Generator Suggestion
+suggestionFrom model =
+    let
+        ss =
+            model
+                |> topics
+                |> .suggestions
+    in
+    case ss of
+        [] ->
+            Random.constant (Suggestion.topic "Your choice")
+
+        t :: ts ->
+            Random.uniform t ts
 
 
 view : Model -> Html Msg
@@ -127,7 +146,7 @@ viewError _ =
 
 viewReady : Html Msg
 viewReady =
-    Html.button [] [ Html.text "go" ]
+    Html.button [ Event.onClick PickATopic ] [ Html.text "go" ]
 
 
 subscriptions : Model -> Sub Msg
