@@ -25,6 +25,19 @@ type Model
     | Presenting Suggestion Topics
 
 
+topics : Model -> Topics
+topics model =
+    case model of
+        Ready ts ->
+            ts
+
+        Presenting _ ts ->
+            ts
+
+        _ ->
+            { suggestions = [] }
+
+
 type alias Topics =
     { suggestions : List Suggestion }
 
@@ -34,12 +47,28 @@ init _ =
     let
         model =
             Initializing
+
+        ts =
+            { suggestions =
+                [ Suggestion.topic "TDD like you meant it"
+                , Suggestion.topic "One return statement"
+                , Suggestion.topic "At most one argument per method"
+                ]
+            }
+
+        cmd =
+            ts
+                |> Ok
+                |> Task.succeed
+                |> Task.perform FetchedTopics
     in
-    ( model, Task.perform FetchedTopics <| Task.succeed (Ok { suggestions = [ Suggestion.topic "TDD like you meant it" ] }) )
+    ( model, cmd )
 
 
 type Msg
     = FetchedTopics (Result Http.Error Topics)
+    | PickATopic
+    | Topic Suggestion
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -47,11 +76,17 @@ update msg model =
     case msg of
         FetchedTopics result ->
             case result of
-                Ok topics ->
-                    ( Ready topics, Cmd.none )
+                Ok ts ->
+                    ( Ready ts, Cmd.none )
 
                 Err error ->
                     ( Error error, Cmd.none )
+
+        PickATopic ->
+            ( model, Cmd.none )
+
+        Topic suggestion ->
+            ( Presenting suggestion <| topics model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -67,7 +102,7 @@ view model =
             template "Are you feeling lucky?" <| viewReady
 
         Presenting suggestion _ ->
-            template "Your suggestion is:" <| viewSuggestion suggestion
+            template "Your suggestion is:" <| Suggestion.view suggestion
 
 
 template : String -> Html Msg -> Html Msg
@@ -93,13 +128,6 @@ viewError _ =
 viewReady : Html Msg
 viewReady =
     Html.button [] [ Html.text "go" ]
-
-
-viewSuggestion : Suggestion -> Html Msg
-viewSuggestion suggestion =
-    Html.span []
-        [ Html.text <| Suggestion.description suggestion
-        ]
 
 
 subscriptions : Model -> Sub Msg
