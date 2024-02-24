@@ -2,13 +2,13 @@ module WheelOfSuggestions exposing (..)
 
 import Browser
 import Html exposing (Html)
-import Html.Attributes as Attribute
 import Html.Events as Event
 import Http
-import Random exposing (Generator, generate)
+import Random exposing (generate)
 import Result exposing (Result)
 import Task
 import WheelOfSuggestions.Suggestion as Suggestion exposing (Suggestion)
+import WheelOfSuggestions.Topic as Topic exposing (Topics)
 
 
 main : Program () Model Msg
@@ -38,11 +38,7 @@ topics model =
             ts
 
         _ ->
-            { suggestions = [] }
-
-
-type alias Topics =
-    { suggestions : List Suggestion }
+            Topic.empty
 
 
 init : flag -> ( Model, Cmd Msg )
@@ -52,12 +48,11 @@ init _ =
             Initializing
 
         ts =
-            { suggestions =
-                [ Suggestion.topic "TDD like you meant it"
-                , Suggestion.topic "One return statement"
-                , Suggestion.topic "At most one argument per method"
-                ]
-            }
+            [ Suggestion.topic "TDD like you meant it"
+            , Suggestion.topic "One return statement"
+            , Suggestion.topic "At most one argument per method"
+            ]
+                |> Topic.fromList
 
         cmd =
             ts
@@ -86,26 +81,10 @@ update msg model =
                     ( Error error, Cmd.none )
 
         PickATopic ->
-            ( model, generate Topic (suggestionFrom model) )
+            ( model, generate Topic (Topic.suggestionFrom <| topics model) )
 
         Topic suggestion ->
             ( Presenting suggestion <| topics model, Cmd.none )
-
-
-suggestionFrom : Model -> Generator Suggestion
-suggestionFrom model =
-    let
-        ss =
-            model
-                |> topics
-                |> .suggestions
-    in
-    case ss of
-        [] ->
-            Random.constant (Suggestion.topic "Your choice")
-
-        t :: ts ->
-            Random.uniform t ts
 
 
 view : Model -> Html Msg
