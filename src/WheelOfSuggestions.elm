@@ -97,10 +97,10 @@ view model =
             template "A problem occurred:" <| viewError error
 
         Ready _ ->
-            template "Are you feeling lucky?" <| viewReady
+            template "Are you feeling lucky?" <| (viewReady <| Html.span [] [])
 
         Presenting suggestion _ ->
-            template "Your suggestion is:" <| Suggestion.view suggestion
+            template "Your suggestion is:" <| (viewReady <| Suggestion.view suggestion)
 
 
 template : String -> Html Msg -> Html Msg
@@ -123,9 +123,14 @@ viewError _ =
         ]
 
 
-viewReady : Html Msg
-viewReady =
-    Html.button [ Event.onClick PickATopic ] [ Html.text "go" ]
+viewReady : Html Msg -> Html Msg
+viewReady content =
+    Html.div []
+        [ content
+        , Html.div []
+            [ Html.button [ Event.onClick PickATopic ] [ Html.text "go" ]
+            ]
+        ]
 
 
 subscriptions : Model -> Sub Msg
