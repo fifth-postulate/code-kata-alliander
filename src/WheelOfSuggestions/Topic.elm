@@ -1,5 +1,7 @@
-module WheelOfSuggestions.Topic exposing (Topics, empty, fromList, suggestionFrom)
+module WheelOfSuggestions.Topic exposing (Topics, decoder, empty, encode, fromList, suggestionFrom)
 
+import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode exposing (Value)
 import Random exposing (Generator)
 import WheelOfSuggestions.Suggestion as Suggestion exposing (Suggestion)
 
@@ -26,3 +28,16 @@ suggestionFrom (Topics { suggestions }) =
 
         t :: ts ->
             Random.uniform t ts
+
+
+encode : Topics -> Value
+encode (Topics topics) =
+    Encode.object
+        [ ( "suggestions", Encode.list Suggestion.encode topics.suggestions )
+        ]
+
+
+decoder : Decoder Topics
+decoder =
+    Decode.field "suggestions" (Decode.list Suggestion.decoder)
+        |> Decode.map fromList
