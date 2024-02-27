@@ -6,7 +6,6 @@ import Html.Events as Event
 import Http
 import Random exposing (generate)
 import Result exposing (Result)
-import Task
 import WheelOfSuggestions.Suggestion as Suggestion exposing (Suggestion)
 import WheelOfSuggestions.Topic as Topic exposing (Topics)
 
@@ -47,18 +46,11 @@ init _ =
         model =
             Initializing
 
-        ts =
-            [ Suggestion.topic "TDD like you meant it"
-            , Suggestion.topic "One return statement"
-            , Suggestion.topic "At most one argument per method"
-            ]
-                |> Topic.fromList
-
         cmd =
-            ts
-                |> Ok
-                |> Task.succeed
-                |> Task.perform FetchedTopics
+            Http.get
+                { url = "topics.json"
+                , expect = Http.expectJson FetchedTopics Topic.decoder
+                }
     in
     ( model, cmd )
 
