@@ -1,0 +1,28 @@
+{
+  "suggestions": [
+    {
+      "topic": "TDD like you meant it"
+    },
+    {
+      "topic": "One return statement"
+    },
+    {
+      "topic": "No primitives"
+    },
+    {
+      "topic": "Adhere to Demeters law"
+    },
+    {
+      "topic": "Identify as much patterns as possible"
+    },
+    {
+      "topic": "Only use keyboard shortcuts"
+    },
+    {
+      "topic": "Ping-pong pair programming"
+    },
+    {
+      "topic": "At most on argument per method"
+    }
+  ]
+}
