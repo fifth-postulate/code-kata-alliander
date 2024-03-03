@@ -91,10 +91,10 @@ view model =
             template "A problem occurred:" <| viewError error
 
         Ready _ ->
-            template "Are you feeling lucky?" <| (viewReady <| Html.span [] [])
+            template "Are you feeling lucky?" <| (viewReady "Hit me!" <| Html.span [] [])
 
         Presenting suggestion _ ->
-            template "Your suggestion is:" <| (viewReady <| Suggestion.view suggestion)
+            template "Your suggestion is:" <| (viewReady "again" <| Suggestion.view suggestion)
 
 
 template : String -> Html Msg -> Html Msg
@@ -126,8 +126,8 @@ viewError _ =
         ]
 
 
-viewReady : Html Msg -> Html Msg
-viewReady content =
+viewReady : String -> Html Msg -> Html Msg
+viewReady message content =
     Html.div
         [ center ]
         [ content
@@ -140,7 +140,7 @@ viewReady content =
                     , Css.marginTop (Css.px 25)
                     ]
                 ]
-                [ Html.text "go" ]
+                [ Html.text message ]
             ]
         ]
 
