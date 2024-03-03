@@ -1,6 +1,8 @@
 module WheelOfSuggestions.Suggestion exposing (Suggestion, decoder, description, encode, topic, view)
 
-import Html exposing (Html)
+import Css
+import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as Attribute
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
 
@@ -21,7 +23,11 @@ description (Suggestion suggestion) =
 
 view : Suggestion -> Html msg
 view suggestion =
-    Html.span []
+    Html.span
+        [ Attribute.css
+            [ Css.fontSize Css.xxLarge
+            ]
+        ]
         [ Html.text <| description suggestion
         ]
 

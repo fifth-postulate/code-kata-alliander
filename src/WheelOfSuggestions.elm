@@ -1,8 +1,10 @@
 module WheelOfSuggestions exposing (..)
 
 import Browser
-import Html exposing (Html)
-import Html.Events as Event
+import Css
+import Html.Styled as Html exposing (Attribute, Html)
+import Html.Styled.Attributes as Attribute
+import Html.Styled.Events as Event
 import Http
 import Random exposing (generate)
 import Result exposing (Result)
@@ -14,7 +16,7 @@ main : Program () Model Msg
 main =
     Browser.element
         { init = init
-        , view = view
+        , view = view >> Html.toUnstyled
         , update = update
         , subscriptions = subscriptions
         }
@@ -97,8 +99,17 @@ view model =
 
 template : String -> Html Msg -> Html Msg
 template title content =
-    Html.div []
-        [ Html.p [] [ Html.text title ]
+    Html.div
+        [ Attribute.css
+            [ Css.fontSize Css.xLarge
+            ]
+        ]
+        [ Html.p
+            [ Attribute.css
+                [ Css.textAlign Css.center
+                ]
+            ]
+            [ Html.text title ]
         , content
         ]
 
@@ -117,11 +128,30 @@ viewError _ =
 
 viewReady : Html Msg -> Html Msg
 viewReady content =
-    Html.div []
+    Html.div
+        [ center ]
         [ content
-        , Html.div []
-            [ Html.button [ Event.onClick PickATopic ] [ Html.text "go" ]
+        , Html.div
+            [ center ]
+            [ Html.button
+                [ Event.onClick PickATopic
+                , Attribute.css
+                    [ Css.fontSize Css.large
+                    , Css.marginTop (Css.px 25)
+                    ]
+                ]
+                [ Html.text "go" ]
             ]
+        ]
+
+
+center : Attribute msg
+center =
+    Attribute.css
+        [ Css.displayFlex
+        , Css.flexDirection Css.column
+        , Css.justifyContent Css.center
+        , Css.alignItems Css.center
         ]
 
 
