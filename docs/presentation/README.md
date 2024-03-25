@@ -5,5 +5,5 @@ One can copy this presentation and adopt it to its needs.
 To serve the presentation locally on can use the following command:
 
 ```
-python -m SimpleHTTPServer
+python3 -m http.server --directory docs
 ```
