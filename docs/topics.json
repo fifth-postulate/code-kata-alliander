@@ -23,6 +23,33 @@
     },
     {
       "topic": "At most on argument per method"
+    },
+    {
+      "topic": "Use a different language on the JVM"
+    },
+    {
+      "topic": "Use property based testing"
+    },
+    {
+      "topic": "Explore TCR; Test && Commit || Revert"
+    },
+    {
+      "topic": "Use a different language, not on the JVM"
+    },
+    {
+      "topic": "Use a different paradigm"
+    },
+    {
+      "topic": "Try ensemble programming"
+    },
+    {
+      "topic": "Write it without any tests"
+    },
+    {
+      "topic": "Use refactor tools as much as possible"
+    },
+    {
+      "topic": "Combine the next two contraints"
     }
   ]
 }
