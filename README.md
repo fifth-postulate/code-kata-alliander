@@ -1,5 +1,8 @@
 # Code Kata
-This repository contains a [presentation][presentation] and utility material for fascilitating a code kata.
+This repository contains a [presentation][presentation] and utility material for
+fascilitating a code kata.
+
+## Code Kata
 A [code kata][wikipedia:code-kata] is
 
 > small snippets of code that they write in one sitting, sometimes repeatedly,
