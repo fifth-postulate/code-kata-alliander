@@ -1,4 +1,4 @@
-.PHONY: all
+.PHONY: all clean
 
 SOURCE_DIR=src
 MODULI=WheelOfSuggestions
@@ -13,3 +13,6 @@ ${BUILD_DIR}/%.min.js: ${BUILD_DIR}/%.js
 
 ${BUILD_DIR}/%.js: ${SOURCE_DIR}/%.elm ${SOURCE_DIR}/*.elm
 	elm make $< --optimize --output $@
+
+clean:
+	rm ${MINIFIED_TARGETS}
